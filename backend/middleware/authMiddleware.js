@@ -5,10 +5,11 @@ exports.authMiddleware = (req, res, next) => {
     if (!token) return res.status(401).json({ error: "Access Denied" });
 
     try {
-        const verified = jwt.verify(token, "SECRET"); // Make sure the secret key matches in config.js
+        const verified = jwt.verify(token, "SECRET"); 
         req.user = verified;
         next();
     } catch (error) {
         res.status(400).json({ error: "Invalid Token" });
     }
+     
 };

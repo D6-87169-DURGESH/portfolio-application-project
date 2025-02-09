@@ -5,7 +5,7 @@ const sequelize = require("./config/database");
 const authRoutes = require("./routes/authRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const contactRoutes = require("./routes/contactRoutes");
-const testimonialRoutes = require("./routes/testimonialRoutes"); // ✅ Import Testimonial Routes
+const testimonialRoutes = require("./routes/testimonialRoutes");  
 
 const app = express();
 app.use(cors());
@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/contact", contactRoutes);
-app.use("/api/testimonials", testimonialRoutes); // ✅ Add Testimonial Routes
+app.use("/api/testimonials", testimonialRoutes); 
 
 sequelize.sync({ force: false }).then(() => console.log("✅ Database connected"));
 
