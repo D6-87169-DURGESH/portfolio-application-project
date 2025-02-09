@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { submitContact } from "../services/api";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/Contact.css"; // ✅ Reuse the same CSS for consistency
-
+import "../styles/Contact.css";  
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
@@ -14,7 +13,7 @@ const Contact = () => {
     e.preventDefault();
     await submitContact(form);
     alert("Message sent successfully!");
-    setForm({ name: "", email: "", message: "" }); // Reset form after submit
+    setForm({ name: "", email: "", message: "" });  
   };
 
   return (

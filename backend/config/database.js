@@ -17,6 +17,7 @@ const sequelize = new Sequelize(config.DB_NAME, config.DB_USER, config.DB_PASSWO
     console.error("❌ Database connection error:", error);
   }
 })();
+//database section 
 
 module.exports = sequelize;
 
