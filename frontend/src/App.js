@@ -8,7 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Footer from "./components/Footer";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css"; // ✅ Import custom CSS for layout
+import "./App.css"; //  
 
 const App = () => {
   return (

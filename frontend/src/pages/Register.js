@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/Register.css"; // ✅ Import the same CSS file
+import "../styles/Register.css";  
  
 
 const Register = () => {
@@ -23,7 +23,7 @@ const Register = () => {
     try {
       await axios.post("http://localhost:5000/api/auth/register", formData);
       alert("Registration Successful!");
-      navigate("/login"); // Redirect to login page after successful registration
+      navigate("/login");  
     } catch (error) {
       alert(error.response?.data?.msg || "Registration failed");
     }
