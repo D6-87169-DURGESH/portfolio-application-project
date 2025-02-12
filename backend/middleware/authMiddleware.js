@@ -1,15 +1,16 @@
 const jwt = require("jsonwebtoken");
 
-exports.authMiddleware = (request, response, next) => {
-    const token = request.header("Authorization");
-    if (!token) return response.status(401).json({ error: "Access Denied" });
+exports.authMiddleware = (req, res, next) => {
+    const token = req.header("Authorization");
+    if (!token) {
+        return res.status(401).json({ error: "Access Denied. No token provided." });
+    }
 
     try {
-        const verified = jwt.verify(token, "SECRET"); 
-        request.user = verified;
+        const verified = jwt.verify(token, "your_secret_key"); // Ensure this matches your config
+        req.user = verified;                 
         next();
     } catch (error) {
-        response.status(400).json({ error: "Invalid Token" });
+        res.status(400).json({ error: "Invalid Token" });
     }
-     
 };

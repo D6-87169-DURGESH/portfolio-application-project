@@ -1,0 +1,291 @@
+//config.js
+module.exports = {
+    PORT: 5000,
+    DB_NAME: "portfolio_db",
+    DB_USER: "D6_87169_Durgesh",
+    DB_PASSWORD: "admin",
+    DB_HOST: "localhost",
+    JWT_SECRET: "your_secret_key",
+  };
+  //database.js
+const { Sequelize } = require("sequelize");
+const config = require("./config");  
+
+const sequelize = new Sequelize(config.DB_NAME, config.DB_USER, config.DB_PASSWORD, {
+  host: config.DB_HOST,
+  dialect: "mysql",
+  logging: false,
+});
+
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("✅ Connected to MySQL");
+    await sequelize.query(`CREATE DATABASE IF NOT EXISTS \`${config.DB_NAME}\`;`);
+    console.log(`✅ Database '${config.DB_NAME}' is ready`);
+  } catch (error) {
+    console.error("❌ Database connection error:", error);
+  }
+})();
+//database section 
+
+module.exports = sequelize;
+
+//authController
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+
+const JWT_SECRET = "your_secret_key"; 
+
+ 
+const registerUser = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+     
+    let user = await User.findOne({ where: { email } });
+    if (user) return res.status(400).json({ msg: "User already exists" });
+
+    
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    
+    user = await User.create({ name, email, password: hashedPassword });
+
+    res.json({ msg: "User registered successfully" });
+  } catch (error) {
+    res.status(500).json({ msg: "Server Error" });
+  }
+};
+ 
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(400).json({ msg: "Invalid Credentials" });
+
+    
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ msg: "Invalid Credentials" });
+
+     
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
+
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({ msg: "Server Error" });
+  }
+};
+
+module.exports = { registerUser, loginUser };  
+//contactController.js
+const Contact = require("../models/Contact");
+
+exports.submitContact = async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+    await Contact.create({ name, email, message });
+    res.status(201).json({ message: "Message submitted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to submit message" });
+  }
+};
+
+exports.getContacts = async (req, res) => {
+  try {
+    const contacts = await Contact.findAll();
+    res.json(contacts);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch messages" });
+  }
+};
+//projectController.js
+const Project = require("../models/Project");
+
+exports.createProject = async (req, res) => {
+  try {
+    const { title, description, image_url, github_link, live_demo_link } = req.body;
+    const project = await Project.create({ title, description, image_url, github_link, live_demo_link });
+    res.status(201).json({ message: "Project added successfully", project });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add project" });
+  }
+};
+
+exports.getProjects = async (req, res) => {
+  try {
+    const projects = await Project.findAll();
+    res.json(projects);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch projects" });
+  }
+};
+//testimoninalController.js
+const Testimonial = require("../models/Testimonial");
+
+exports.createTestimonial = async (req, res) => {
+  try {
+    const { name, message } = req.body;
+    const testimonial = await Testimonial.create({ name, message });
+    res.status(201).json({ message: "Testimonial added successfully", testimonial });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add testimonial" });
+  }
+};
+
+exports.getTestimonials = async (req, res) => {
+  try {
+    const testimonials = await Testimonial.findAll();
+    res.json(testimonials);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch testimonials" });
+  }
+};
+//authmiddleware
+const jwt = require("jsonwebtoken");
+
+exports.authMiddleware = (request, response, next) => {
+    const token = request.header("Authorization");
+    if (!token) return response.status(401).json({ error: "Access Denied" });
+
+    try {
+        const verified = jwt.verify(token, "SECRET"); 
+        request.user = verified;
+        next();
+    } catch (error) {
+        response.status(400).json({ error: "Invalid Token" });
+    }
+     
+};
+//contact.js
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database");
+
+const Contact = sequelize.define("Contact", {
+  name: { type: DataTypes.STRING, allowNull: false },
+  email: { type: DataTypes.STRING, allowNull: false },
+  message: { type: DataTypes.TEXT, allowNull: false },
+});
+
+module.exports = Contact;
+//project.js
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database");
+
+const Project = sequelize.define("Project", {
+  title: { type: DataTypes.STRING, allowNull: false },
+  description: { type: DataTypes.TEXT, allowNull: false },
+  image_url: { type: DataTypes.STRING },
+  github_link: { type: DataTypes.STRING },
+  live_demo_link: { type: DataTypes.STRING },
+});
+
+module.exports = Project;
+
+//testimonial.js
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database");
+
+const Testimonial = sequelize.define("Testimonial", {
+  name: { type: DataTypes.STRING, allowNull: false },
+  message: { type: DataTypes.TEXT, allowNull: false },
+});
+
+module.exports = Testimonial;
+//users.js
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database");
+
+const User = sequelize.define("User", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
+
+module.exports = User;
+
+//authRoutes.js
+const express = require("express");
+const { registerUser, loginUser } = require("../controllers/authController");  
+
+const router = express.Router();
+
+router.post("/register", registerUser);
+router.post("/login", loginUser);
+
+module.exports = router;
+
+//contactRoutes..js
+const express = require("express");
+const { submitContact } = require("../controllers/contactController");
+
+const router = express.Router();
+
+router.post("/", submitContact);
+
+module.exports = router;
+//projectroutes.js
+const express = require("express");
+const { authMiddleware } = require("../middleware/authMiddleware");  
+const { createProject, getProjects } = require("../controllers/projectController");
+
+const router = express.Router();
+
+router.get("/", getProjects);
+router.post("/", authMiddleware, createProject);  
+
+module.exports = router;
+//testimonialroutes.js
+const express = require("express");
+const { createTestimonial, getTestimonials } = require("../controllers/testimonialController");
+
+const router = express.Router();
+
+router.get("/", getTestimonials);
+router.post("/", createTestimonial);
+
+module.exports = router;
+
+ 
+//server.js
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const sequelize = require("./config/database");
+const authRoutes = require("./routes/authRoutes");
+const projectRoutes = require("./routes/projectRoutes");
+const contactRoutes = require("./routes/contactRoutes");
+const testimonialRoutes = require("./routes/testimonialRoutes");  
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+app.use("/api/auth", authRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/contact", contactRoutes);
+app.use("/api/testimonials", testimonialRoutes); 
+
+sequelize.sync({ force: false }).then(() => console.log("✅ Database connected"));
+
+app.listen(5000, () => console.log("🚀 Server running on port 5000"));
+
+s

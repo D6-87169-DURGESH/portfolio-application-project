@@ -1,22 +1,21 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
-const User = sequelize.define("User", {
+const Settings = sequelize.define("Settings", {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
     },
-    name: {
+    darkMode: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
+    seoTitle: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-    },
-    password: {
+    seoDescription: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -26,5 +25,4 @@ const User = sequelize.define("User", {
     }
 });
 
-module.exports = User;
-
+module.exports = Settings;

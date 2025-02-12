@@ -1,17 +1,12 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { registerUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/Register.css";  
- 
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-
+  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -21,11 +16,11 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/auth/register", formData);
-      alert("Registration Successful!");
-      navigate("/login");  
+      await registerUser(formData);
+      setMessage("Registration Successful! Redirecting to login...");
+      setTimeout(() => navigate("/login"), 2000); // Redirect after 2 seconds
     } catch (error) {
-      alert(error.response?.data?.msg || "Registration failed");
+      setMessage(error.response?.data?.msg || "Registration failed");
     }
   };
 
@@ -36,6 +31,7 @@ const Register = () => {
           <div className="col-md-6">
             <div className="card shadow p-4 login-card animate-fade-in">
               <h2 className="text-center mb-4">Register</h2>
+              {message && <p className="alert alert-info text-center">{message}</p>}
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label className="form-label">Name</label>
