@@ -7,7 +7,7 @@ exports.authMiddleware = (req, res, next) => {
     }
 
     try {
-        const verified = jwt.verify(token, "your_secret_key"); // Ensure this matches your config
+        const verified = jwt.verify(token, "your_secret_key");  
         req.user = verified;                 
         next();
     } catch (error) {

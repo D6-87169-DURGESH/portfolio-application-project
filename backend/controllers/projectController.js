@@ -4,9 +4,9 @@ exports.createProject = async (req, res) => {
     try {
         const { title, description, image_url, github_link, live_demo_link } = req.body;
 
-        if (!title || !description) {
-            return res.status(400).json({ error: "Title and Description are required" });
-        }
+        // if (!title || !description) {
+        //     return res.status(400).json({ error: "Title and Description are required" });
+        // }
 
         const project = await Project.create({ title, description, image_url, github_link, live_demo_link });
         res.status(201).json({ message: "Project added successfully", project });
