@@ -12,9 +12,9 @@ const Projects = () => {
   const [github_link, setGithubLink] = useState("");
   const [live_demo_link, setLiveDemoLink] = useState("");
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);  // ✅ Added loading state
+  const [loading, setLoading] = useState(false);   
 
-  // ✅ Retrieve token safely
+  
   const token = localStorage.getItem("token") || null;
   console.log(localStorage.getItem("token"));
   useEffect(() => {

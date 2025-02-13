@@ -29,7 +29,7 @@ const Login = () => {
       console.log("🔐 Saved token:", localStorage.getItem("token")); 
       alert("Login successful!");
 
-      navigate("/"); // Redirect to Home page after login
+      navigate("/"); 
     } catch (error) {
       console.error("❌ Login error:", error.response?.data || error.message);
       alert("Invalid credentials! Please try again.");
