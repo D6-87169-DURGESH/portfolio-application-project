@@ -7,12 +7,12 @@ import Projects from "./pages/Projects";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";  // ✅ Admin Dashboard
-import Blogs from "./pages/Blogs";  // ✅ Blog Section
-import Settings from "./pages/Settings";  // ✅ Dark Mode & SEO Settings
+import Dashboard from "./pages/Dashboard";  
+import Blogs from "./pages/Blogs";   
+import Settings from "./pages/Settings";  
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css"; 
-
+import Testimonial from "./pages/Testimonial";
 const App = () => {
   return (
     <Router>
@@ -28,6 +28,7 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />  {/* ✅ Admin Dashboard */}
             <Route path="/blogs" element={<Blogs />} />  {/* ✅ Blogs Section */}
             <Route path="/settings" element={<Settings />} />  {/* ✅ Site Settings */}
+            <Route path="/testimonials" element={<Testimonial />} />
           </Routes>
         </div>
         <Footer /> {/* ✅ Footer stays at the bottom */}

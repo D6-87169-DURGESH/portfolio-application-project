@@ -18,9 +18,20 @@ export const getProjects = async () => {
 };
 
 export const createProject = async (projectData, token) => {
-  return await axios.post(`${API_URL}/projects`, projectData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  console.log("📤 Sending project data to API:", projectData);
+  console.log("🛠️ Token being used:", token);
+
+  try {
+    const response = await axios.post(`${API_URL}/projects`, projectData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log("✅ Project created successfully!", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error creating project:", error.response?.data || error.message);
+    throw error;
+  }
 };
 
 export const deleteProject = async (projectId, token) => {

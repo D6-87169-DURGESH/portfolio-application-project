@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/api";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/Login.css";  
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const navigate = useNavigate(); // Initialize navigation hook
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -13,10 +15,23 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log("🔄 Attempting login with:", credentials);
       const response = await loginUser(credentials);
-      localStorage.setItem("token", response.token);
+
+      if (!response || !response.data || !response.data.token) {
+        console.error("❌ No token received. Full response:", response);
+        alert("Login failed! No token received.");
+        return;
+      }
+
+      console.log("✅ Login successful! Token:", response.data.token);
+      localStorage.setItem("token", response.data.token);
+      console.log("🔐 Saved token:", localStorage.getItem("token")); 
       alert("Login successful!");
+
+      navigate("/"); // Redirect to Home page after login
     } catch (error) {
+      console.error("❌ Login error:", error.response?.data || error.message);
       alert("Invalid credentials! Please try again.");
     }
   };
