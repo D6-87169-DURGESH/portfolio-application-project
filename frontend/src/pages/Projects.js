@@ -3,7 +3,6 @@ import { getProjects, createProject, deleteProject } from "../services/api";
 import ProjectCard from "../components/ProjectCard";
 import "../styles/Register.css";  
 
-
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [title, setTitle] = useState("");
@@ -14,15 +13,16 @@ const Projects = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);   
 
-  
-  const token = localStorage.getItem("token") || null;
-  console.log(localStorage.getItem("token"));
+  // 🔄 Fetch token from Session Storage
+  const token = sessionStorage.getItem("token") || null;
+  console.log("🔑 Session Token:", token);
+
   useEffect(() => {
     fetchProjects();
   }, []);
 
   const fetchProjects = async () => {
-    setLoading(true);  // ✅ Show loading while fetching
+    setLoading(true);   
     try {
       const data = await getProjects();
       setProjects(data);
@@ -52,7 +52,6 @@ const Projects = () => {
     console.log("📤 Sending project data:", projectData);
     console.log("🔐 Token used:", token);
   
-    // Ensure all required fields are present
     if (!title || !description) {
       setMessage("❌ Title and description are required!");
       return;
@@ -64,14 +63,13 @@ const Projects = () => {
       await createProject(projectData, token);
       setMessage("✅ Project created successfully!");
   
-      // Reset input fields
       setTitle("");
       setDescription("");
       setImageUrl("");
       setGithubLink("");
       setLiveDemoLink("");
   
-      fetchProjects(); // ✅ Refresh projects
+      fetchProjects(); // Refresh projects
     } catch (error) {
       console.error("❌ Error creating project:", error.response?.data || error.message);
       setMessage("❌ Failed to create project: " + (error.response?.data?.message || "Unknown error"));
@@ -85,7 +83,7 @@ const Projects = () => {
     try {
       await deleteProject(projectId, token);
       setMessage("✅ Project deleted successfully!");
-      fetchProjects(); // ✅ Refresh projects after deletion
+      fetchProjects(); // Refresh projects after deletion
     } catch (error) {
       console.error("❌ Error deleting project:", error);
       setMessage("❌ Failed to delete project.");

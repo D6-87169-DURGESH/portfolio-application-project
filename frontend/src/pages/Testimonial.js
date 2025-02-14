@@ -1,85 +1,106 @@
 import React, { useEffect, useState } from "react";
-import { getTestimonials, createTestimonial } from "../services/api"; // Import API functions
+import { getTestimonials, createTestimonial } from "../services/api";
 import TestimonialCard from "../components/TestimonialCard";
+import "../styles/Register.css";
 
-const Testimonial = ({ token }) => {
+const Testimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
+  const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  
+  // 🔄 Fetch token from Session Storage
+  const token = sessionStorage.getItem("token") || null;
+  console.log("🔑 Session Token:", token);
 
-  // Fetch testimonials on page load
   useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        const data = await getTestimonials();
-        setTestimonials(data);
-      } catch (err) {
-        console.error("Error fetching testimonials:", err);
-      }
-    };
     fetchTestimonials();
   }, []);
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const fetchTestimonials = async () => {
     setLoading(true);
-    setError("");
-
-    if (!name || !message) {
-      setError("Both name and message are required.");
-      setLoading(false);
-      return;
-    }
-
     try {
-      const newTestimonial = await createTestimonial({ name, message }, token);
-      setTestimonials([...testimonials, newTestimonial]);
-      setName("");
-      setMessage("");
-    } catch (err) {
-      setError("Failed to submit testimonial.");
+      const data = await getTestimonials();
+      setTestimonials(data);
+    } catch (error) {
+      console.error("❌ Error fetching testimonials:", error);
+      setMessage("❌ Failed to load testimonials.");
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div style={{ maxWidth: "600px", margin: "auto", padding: "20px" }}>
-      <h2>Testimonials</h2>
+  const handleCreateTestimonial = async (e) => {
+    e.preventDefault();
+    if (!token) {
+      setMessage("❌ You need to log in to submit a testimonial.");
+      return;
+    }
+    
+    if (!name || !feedback) {
+      setMessage("❌ Name and feedback are required!");
+      return;
+    }
 
-      {/* Display Testimonials */}
-      {testimonials.length > 0 ? (
-        testimonials.map((t) => <TestimonialCard key={t.id} testimonial={t} />)
+    const testimonialData = { name, feedback };
+    console.log("📤 Sending testimonial data:", testimonialData);
+
+    try {
+      await createTestimonial(testimonialData, token);
+      setMessage("✅ Testimonial submitted successfully!");
+
+      setName("");
+      setFeedback("");
+      fetchTestimonials(); // Refresh testimonials
+    } catch (error) {
+      console.error("❌ Error submitting testimonial:", error);
+      setMessage("❌ Failed to submit testimonial.");
+    }
+  };
+
+  return (
+    <div className="container my-5">
+      <h2 className="text-center mb-4">Testimonials</h2>
+      {message && <p className="alert alert-info">{message}</p>}
+
+      {token ? (
+        <div className="mb-5">
+          <h3>Submit a Testimonial</h3>
+          <form onSubmit={handleCreateTestimonial}>
+            <div className="mb-3">
+              <label>Name</label>
+              <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} required />
+            </div>
+            <div className="mb-3">
+              <label>Feedback</label>
+              <textarea className="form-control" value={feedback} onChange={(e) => setFeedback(e.target.value)} required></textarea>
+            </div>
+            <button type="submit" className="btn btn-primary">Submit Testimonial</button>
+          </form>
+        </div>
       ) : (
-        <p>No testimonials available.</p>
+        <p className="alert alert-warning">🔒 You must log in to submit a testimonial.</p>
       )}
 
-      {/* Testimonial Form */}
-      <h3>Leave a Testimonial</h3>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
-        <input
-          type="text"
-          placeholder="Your Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={{ padding: "8px", marginBottom: "10px" }}
-        />
-        <textarea
-          placeholder="Your Message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          style={{ padding: "8px", marginBottom: "10px" }}
-        />
-        <button type="submit" disabled={loading} style={{ padding: "10px", cursor: "pointer" }}>
-          {loading ? "Submitting..." : "Submit"}
-        </button>
-      </form>
+      <h3 className="text-center">What People Say</h3>
+      {loading ? (
+        <p className="text-center">⏳ Loading testimonials...</p>
+      ) : (
+        <div className="row">
+          {testimonials.length > 0 ? (
+            testimonials.map((testimonial) => (
+              <div className="col-md-4" key={testimonial.id}>
+                <TestimonialCard testimonial={testimonial} />
+              </div>
+            ))
+          ) : (
+            <p className="text-center">No testimonials found.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
 
-export default Testimonial;
+export default Testimonials;

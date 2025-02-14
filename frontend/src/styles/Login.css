@@ -1,30 +1,53 @@
+ /* ✅ Default (Light Mode) Styles */
 .login-page {
-    height: 100vh;
-    background: linear-gradient(to right, #ffffff, #f8f9fa);
-  }
-  
-  .login-card {
-    border-radius: 10px;
-    background: #fff;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .login-card:hover {
-    transform: scale(1.02);
-  }
-  
-  .animate-fade-in {
-    animation: fadeIn 0.8s ease-in-out;
-  }
-  
-  @keyframes fadeIn {
-    from {
+  height: 100vh;
+  background: linear-gradient(to right, #ffffff, #f8f9fa);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card {
+  border-radius: 10px;
+  background: #fff;
+  padding: 30px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.login-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ✅ Dark Mode */
+.dark-mode .login-page {
+  background: linear-gradient(to right, #121212, #1c1c1c);
+}
+
+.dark-mode .login-card {
+  background: #222;
+  color: white;
+  box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .login-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0px 6px 12px rgba(255, 255, 255, 0.2);
+}
+
+/* ✅ Fade-in Animation */
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
       opacity: 0;
       transform: translateY(-20px);
-    }
-    to {
+  }
+  to {
       opacity: 1;
       transform: translateY(0);
-    }
   }
-  
+}

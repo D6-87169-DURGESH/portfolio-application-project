@@ -47,10 +47,27 @@ export const getTestimonials = async () => {
 };
 
 export const createTestimonial = async (testimonialData, token) => {
-  return await axios.post(`${API_URL}/testimonials`, testimonialData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  if (!token) {
+    console.error("❌ Missing token for authentication");
+    return { error: "Authentication required" };
+  }
+
+  try {
+    const response = await axios.post(`${API_URL}/testimonials`, testimonialData, {
+      headers: { 
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error creating testimonial:", error.response?.data || error.message);
+    throw error;
+  }
 };
+
+
 
 // ========== Contact Form APIs ==========
 export const submitContact = async (data) => {
@@ -70,10 +87,18 @@ export const getBlogs = async () => {
 };
 
 export const createBlog = async (blogData, token) => {
-  return await axios.post(`${API_URL}/blogs`, blogData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  try {
+    const response = await axios.post(`${API_URL}/blogs`, blogData, {
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("❌ Blog creation failed:", error.response?.data || error.message);
+    throw error;
+  }
 };
+
+
 
 // ========== Settings APIs (Dark Mode & SEO) ==========
 export const getSettings = async () => {
@@ -82,7 +107,21 @@ export const getSettings = async () => {
 };
 
 export const updateSettings = async (settingsData, token) => {
-  return await axios.post(`${API_URL}/settings`, settingsData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  try {
+    if (!token) throw new Error("❌ No token provided for authentication");
+
+    const response = await axios.put(`${API_URL}/settings`, settingsData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("✅ Settings updated successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error updating settings:", error.response?.data || error.message);
+    throw error;
+  }
 };
+

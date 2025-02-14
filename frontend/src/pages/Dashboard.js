@@ -6,7 +6,7 @@ const Dashboard = () => {
   const [projects, setProjects] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
   const navigate = useNavigate();
-  const token = localStorage.getItem("token"); // Get token from local storage
+  const token = sessionStorage.getItem("token"); // Use sessionStorage instead of localStorage
 
   useEffect(() => {
     if (!token) {

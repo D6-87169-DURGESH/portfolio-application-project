@@ -3,7 +3,7 @@ import { getProjects, getTestimonials } from "../services/api";
 import ProjectCard from "../components/ProjectCard";
 import TestimonialCard from "../components/TestimonialCard";
 import { Link, useNavigate } from "react-router-dom";
-import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaEnvelope, FaPhone, FaMapMarkerAlt, FaCog, FaSun, FaMoon } from "react-icons/fa";
+import { FaCog, FaSun, FaMoon, FaInstagram, FaGithub, FaLinkedin } from "react-icons/fa";
 import "../styles/home.css";
 
 const Home = () => {
@@ -46,35 +46,13 @@ const Home = () => {
 
   return (
     <>
-      {/* ✅ Settings Button */}
-      <button
-        className="settings-btn"
-        onClick={() => setShowSettings(true)}
-        aria-label="Open Settings"
-      >
-        <FaCog size={25} />
+      {/* Dark Mode Toggle Button (Fixed in Bottom Right Corner) */}
+      <button className="dark-mode-btn" onClick={() => setDarkMode(!darkMode)} aria-label="Toggle Dark Mode">
+        {darkMode ? <FaMoon size={25} /> : <FaSun size={25} />}
       </button>
 
-      {/* ✅ Settings Modal */}
-      {showSettings && (
-        <div className="settings-modal">
-          <div className="settings-content">
-            <h3>Settings</h3>
-            <label className="dark-mode-toggle">
-              <input
-                type="checkbox"
-                checked={darkMode}
-                onChange={() => setDarkMode(!darkMode)}
-              />
-              {darkMode ? <FaMoon size={20} /> : <FaSun size={20} />} Dark Mode
-            </label>
-            <button className="btn btn-danger" onClick={() => setShowSettings(false)}>Close</button>
-          </div>
-        </div>
-      )}
-
-      {/* ✅ Hero Section */}
-      <section className={`hero ${darkMode ? "bg-dark text-white" : "bg-light text-dark"} text-center py-5`}>
+      {/* Hero Section */}
+      <section className={`hero ${darkMode ? "bg-dark text-white" : "bg-light text-dark"} text-center pt-5 pb-5`}>
         <div className="container">
           <h1 className="display-4">Welcome to My Portfolio</h1>
           <p className="lead">Showcasing my latest projects and client testimonials.</p>
@@ -85,23 +63,10 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ✅ About Section */}
-      <section id="about" className="container my-5 text-center">
-        <h2>About Me</h2>
-        <p className="lead">
-          I am a passionate developer specializing in modern web applications.
-          With expertise in React, Node.js, and databases, I create seamless user experiences.
-        </p>
-        <Link to="/about" className="btn btn-outline-dark">Read More</Link>
-      </section>
-
-      {/* ✅ Projects Section */}
-      <section id="projects" className="container my-5">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2>Projects</h2>
-          <Link to="/projects" className="btn btn-outline-primary">View All</Link>
-        </div>
-        <div className="row">
+      {/* Projects Section */}
+      <section className="container pt-5 pb-5">
+        <h2 className="text-center">Projects</h2>
+        <div className="row mt-4">
           {projects.slice(0, 3).map((project) => (
             <div className="col-md-4 mb-4" key={project.id}>
               <ProjectCard project={project} />
@@ -110,14 +75,11 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ✅ Testimonials Section */}
-      <section className={`${darkMode ? "bg-secondary text-white" : "bg-light text-dark"} py-5`}>
+      {/* Testimonials Section */}
+      <section className={`${darkMode ? "bg-secondary text-white" : "bg-light text-dark"} pt-5 pb-5 text-center`}>
         <div className="container">
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h2>Client Testimonials</h2>
-            <Link to="/testimonials" className="btn btn-outline-secondary">View All</Link>
-          </div>
-          <div className="row">
+          <h2>Client Testimonials</h2>
+          <div className="row mt-4">
             {testimonials.slice(0, 3).map((testimonial) => (
               <div className="col-md-4 mb-4" key={testimonial.id}>
                 <TestimonialCard testimonial={testimonial} />
@@ -127,38 +89,26 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ✅ Contact Section */}
-      <section className={`contact ${darkMode ? "bg-dark text-white" : "bg-light text-dark"} py-5`}>
-        <div className="container text-center">
-          <h2>Contact Me</h2>
-          <div className="row justify-content-center">
-            <div className="col-md-4 d-flex align-items-center justify-content-center">
-              <FaMapMarkerAlt size={25} className="me-2" />
-              <p className="mb-0">1234 Street, City, Country</p>
-            </div>
-            <div className="col-md-4 d-flex align-items-center justify-content-center">
-              <FaEnvelope size={25} className="me-2" />
-              <p className="mb-0">email@example.com</p>
-            </div>
-            <div className="col-md-4 d-flex align-items-center justify-content-center">
-              <FaPhone size={25} className="me-2" />
-              <p className="mb-0">+123 456 7890</p>
-            </div>
-          </div>
+      {/* About Section */}
+      <section className="container pt-5 pb-5 text-center">
+        <h2>About Me</h2>
+        <p className="lead">I am a passionate developer with experience in web and software development. My goal is to create innovative solutions that make an impact.</p>
+      </section>
 
-          {/* ✅ Social Media Icons */}
-          <div className="mt-4">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-white mx-3">
-              <FaFacebook size={30} />
+      {/* Contact & Social Media Section */}
+      <section className={`${darkMode ? "bg-dark text-white" : "bg-light text-dark"} pt-5 pb-5 text-center`}>
+        <div className="container">
+          <h2>Contact Me</h2>
+          <p>Email: <a href="mailto:your.email@example.com">your.email@example.com</a></p>
+          <div className="social-icons mt-3">
+            <a href="https://instagram.com/yourprofile" target="_blank" rel="noopener noreferrer">
+              <FaInstagram size={30} className="mx-2 text-danger" />
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-white mx-3">
-              <FaTwitter size={30} />
+            <a href="https://github.com/yourprofile" target="_blank" rel="noopener noreferrer">
+              <FaGithub size={30} className="mx-2 text-dark" />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-white mx-3">
-              <FaLinkedin size={30} />
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-white mx-3">
-              <FaInstagram size={30} />
+            <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer">
+              <FaLinkedin size={30} className="mx-2 text-primary" />
             </a>
           </div>
         </div>

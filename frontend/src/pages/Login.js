@@ -6,7 +6,9 @@ import "../styles/Login.css";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
-  const navigate = useNavigate(); // Initialize navigation hook
+  const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -14,35 +16,39 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      console.log("🔄 Attempting login with:", credentials);
-      const response = await loginUser(credentials);
+    setLoading(true);
+    setMessage(null);
 
+    try {
+      const response = await loginUser(credentials);
       if (!response || !response.data || !response.data.token) {
-        console.error("❌ No token received. Full response:", response);
-        alert("Login failed! No token received.");
+        setMessage({ type: "danger", text: "Login failed! No token received." });
+        setLoading(false);
         return;
       }
 
-      console.log("✅ Login successful! Token:", response.data.token);
-      localStorage.setItem("token", response.data.token);
-      console.log("🔐 Saved token:", localStorage.getItem("token")); 
-      alert("Login successful!");
+      sessionStorage.setItem("token", response.data.token);
+      setMessage({ type: "success", text: "Login successful! Redirecting..." });
 
-      navigate("/"); 
+      setTimeout(() => navigate("/"), 2000); // Redirect after 2 seconds
     } catch (error) {
-      console.error("❌ Login error:", error.response?.data || error.message);
-      alert("Invalid credentials! Please try again.");
+      setMessage({ type: "danger", text: "Invalid credentials! Please try again." });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <section className="login-page d-flex align-items-center justify-content-center">
+    <section className="login-page d-flex align-items-center justify-content-center pt-5">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-md-6">
             <div className="card shadow p-4 login-card animate-fade-in">
               <h2 className="text-center mb-4">Login</h2>
+
+              {/* ✅ Notification Message */}
+              {message && <div className={`alert alert-${message.type}`} role="alert">{message.text}</div>}
+
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label className="form-label">Email</label>
@@ -68,10 +74,20 @@ const Login = () => {
                     required
                   />
                 </div>
-                <button type="submit" className="btn btn-primary w-100">
-                  Login
+
+                {/* ✅ Show loading spinner while logging in */}
+                <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                      Logging in...
+                    </>
+                  ) : (
+                    "Login"
+                  )}
                 </button>
               </form>
+
               <p className="text-center mt-3">
                 Don't have an account? <a href="/register">Register here</a>
               </p>

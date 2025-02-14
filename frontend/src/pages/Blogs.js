@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { getBlogs, createBlog } from "../services/api";
 import BlogCard from "../components/BlogCard";
-
+ 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [message, setMessage] = useState("");
-  const token = localStorage.getItem("token"); // Auth token for admin actions
+  const token = sessionStorage.getItem("token"); // Use sessionStorage instead of localStorage
 
   useEffect(() => {
     getBlogs().then(setBlogs);
@@ -15,20 +15,19 @@ const Blogs = () => {
 
   const handleCreateBlog = async (e) => {
     e.preventDefault();
-    if (!token) {
-      setMessage("You need to log in to create a blog post.");
+    if (!title.trim() || !content.trim()) {
+      setMessage("Title and content are required.");
       return;
     }
-
+  
     try {
       await createBlog({ title, content }, token);
       setMessage("Blog created successfully!");
       setTitle("");
       setContent("");
-      getBlogs().then(setBlogs); // Refresh blogs after creating
+      getBlogs().then(setBlogs);
     } catch (error) {
-      setMessage("Failed to create blog.");
-      console.error(error);
+      setMessage(error.response?.data?.message || "Failed to create blog.");
     }
   };
 
@@ -70,4 +69,4 @@ const Blogs = () => {
   );
 };
 
-export default Blogs;
+export default Blogs;  

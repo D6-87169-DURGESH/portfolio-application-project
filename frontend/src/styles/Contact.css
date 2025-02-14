@@ -16,6 +16,10 @@
   .animate-fade-in {
     animation: fadeIn 0.8s ease-in-out;
   }
+  .contact-page {
+    min-height: 100vh; /* Ensure it takes full viewport height */
+    padding-top: 100px; /* Adjust according to your navbar height */
+  }
   
   @keyframes fadeIn {
     from {
@@ -26,5 +30,7 @@
       opacity: 1;
       transform: translateY(0);
     }
+     
+    
   }
   
