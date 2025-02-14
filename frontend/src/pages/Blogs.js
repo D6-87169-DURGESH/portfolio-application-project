@@ -7,7 +7,7 @@ const Blogs = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [message, setMessage] = useState("");
-  const token = sessionStorage.getItem("token"); // Use sessionStorage instead of localStorage
+  const token = sessionStorage.getItem("token"); 
 
   useEffect(() => {
     getBlogs().then(setBlogs);

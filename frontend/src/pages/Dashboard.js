@@ -6,12 +6,12 @@ const Dashboard = () => {
   const [projects, setProjects] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
   const navigate = useNavigate();
-  const token = sessionStorage.getItem("token"); // Use sessionStorage instead of localStorage
+  const token = sessionStorage.getItem("token");  
 
   useEffect(() => {
     if (!token) {
       alert("Access Denied! Please log in.");
-      navigate("/login"); // Redirect to login if not authenticated
+      navigate("/login");  
       return;
     }
 
