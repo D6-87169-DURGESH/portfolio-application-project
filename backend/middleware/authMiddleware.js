@@ -20,6 +20,7 @@ exports.authMiddleware = (req, res, next) => {
         const verified = jwt.verify(token, config.JWT_SECRET); // Use correct secret key
         req.user = verified;
         next();
+        
     } catch (error) {
         //console.error("JWT Verification Error:", error.message); // Debugging
         res.status(400).json({ error: "Invalid Token", details: error.message });
