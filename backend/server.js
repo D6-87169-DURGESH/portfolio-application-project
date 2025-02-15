@@ -13,7 +13,10 @@ const homeRoutes = require("./routes/homeRoutes");
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(express.json()); // ✅ This replaces body-parser
+app.use(express.urlencoded({ extended: true })); // ✅ Enables parsing of URL-encoded data
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);

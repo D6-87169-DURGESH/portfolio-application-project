@@ -1,3 +1,4 @@
+
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
@@ -11,11 +12,15 @@ const Testimonial = sequelize.define("Testimonial", {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    message: {
+    feedback: {
         type: DataTypes.TEXT,
         allowNull: false,
     },
     createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {  // 🔹 Add this field
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
     }
