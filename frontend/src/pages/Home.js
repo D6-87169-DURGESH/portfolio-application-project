@@ -15,9 +15,10 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");  // 🔥 Using sessionStorage
+    console.log("Session Token:", token);  // Debugging
     if (!token) {
-      navigate("/");
+      navigate("/"); // Redirect if no token found
     } else {
       setIsAuthenticated(true);
     }
@@ -46,7 +47,7 @@ const Home = () => {
 
   return (
     <>
-      {/* Dark Mode Toggle Button (Fixed in Bottom Right Corner) */}
+      {/* Dark Mode Toggle Button */}
       <button className="dark-mode-btn" onClick={() => setDarkMode(!darkMode)} aria-label="Toggle Dark Mode">
         {darkMode ? <FaMoon size={25} /> : <FaSun size={25} />}
       </button>
@@ -93,14 +94,17 @@ const Home = () => {
       <section className="container pt-5 pb-5 text-center">
         <h2>About Me</h2>
         <p className="lead">🚀 Hello, I'm Durgesh Ahire!
-I'm a passionate Full Stack Developer with expertise in Java, Spring Boot, Hibernate, and React.js. I love building scalable and efficient web applications that provide seamless user experiences. My strong problem-solving skills and ability to adapt to new technologies help me craft high-performance solutions.
-Currently, I am pursuing a Post Graduate Diploma in Advanced Computing at Sunbeam Institute, further honing my development skills. I have also completed my B.Tech from Pune University.</p></section>
+        I'm a passionate Full Stack Developer with expertise in Java, Spring Boot, Hibernate, and React.js. 
+        I love building scalable and efficient web applications that provide seamless user experiences. 
+        Currently, I am pursuing a Post Graduate Diploma in Advanced Computing at Sunbeam Institute, further honing my development skills. 
+        I have also completed my B.Tech from Pune University.</p>
+      </section>
 
       {/* Contact & Social Media Section */}
       <section className={`${darkMode ? "bg-dark text-white" : "bg-light text-dark"} pt-5 pb-5 text-center`}>
         <div className="container">
           <h2>Contact Me</h2>
-          <p>Email: <a href="mailto:your.email@example.com">durgeshahire6403.email@example.com</a></p>
+          <p>Email: <a href="mailto:durgeshahire6403.email@example.com">durgeshahire6403.email@example.com</a></p>
           <div className="social-icons mt-3">
             <a href="https://instagram.com/yourprofile" target="_blank" rel="noopener noreferrer">
               <FaInstagram size={30} className="mx-2 text-danger" />
