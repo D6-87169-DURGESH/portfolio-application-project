@@ -17,8 +17,8 @@
     animation: fadeIn 0.8s ease-in-out;
   }
   .contact-page {
-    min-height: 100vh; /* Ensure it takes full viewport height */
-    padding-top: 100px; /* Adjust according to your navbar height */
+    min-height: 80vh;  
+    padding-top: 30px;  
   }
   
   @keyframes fadeIn {

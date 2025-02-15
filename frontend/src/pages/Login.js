@@ -18,26 +18,28 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
-
+  
     try {
-      const response = await loginUser(credentials);
-      if (!response || !response.data || !response.data.token) {
+      const data = await loginUser(credentials);
+      console.log("✅ Login API Response:", data); // ✅ Debug API response
+  
+      if (!data || !data.token) {
         setMessage({ type: "danger", text: "Login failed! No token received." });
-        setLoading(false);
         return;
       }
-
-      sessionStorage.setItem("token", response.data.token);
+  
+      sessionStorage.setItem("token", data.token);
       setMessage({ type: "success", text: "Login successful! Redirecting..." });
-
-      setTimeout(() => navigate("/"), 2000); // Redirect after 2 seconds
+  
+      setTimeout(() => navigate("/"), 2000);
     } catch (error) {
+      console.error("❌ API Error:", error.response?.data || error.message);
       setMessage({ type: "danger", text: "Invalid credentials! Please try again." });
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <section className="login-page d-flex align-items-center justify-content-center pt-5">
       <div className="container">
