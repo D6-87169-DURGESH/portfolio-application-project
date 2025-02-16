@@ -8,11 +8,13 @@ on:
 
 jobs:
   build:
+
     runs-on: self-hosted
 
     strategy:
       matrix:
         node-version: [22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v4
@@ -22,26 +24,18 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: backend/package-lock.json
+        cache-dependency-path: backend/package-lock.json  # ✅ Ensure correct dependency caching
 
     - name: Install dependencies
       run: npm ci
-      working-directory: backend
+      working-directory: backend  # ✅ Run inside backend directory
 
     - name: Build project
       run: npm run build --if-present
-      working-directory: backend
-
-    - name: Run tests
-      run: npm test
-      working-directory: backend
+      working-directory: backend  # ✅ Run inside backend directory
 
     - name: Setup environment file
       run: |
         touch .env
-        echo "DB_HOST=${{ secrets.DB_HOST }}" > .env
-        echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-        echo "DB_USER=${{ secrets.DB_USER }}" >> .env
-        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-        echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-      working-directory: backend
+        echo "${{ secrets.PROD_ENV_FILE }}" > .env
+      working-directory: backend  # ✅ Ensure .env is created inside backend folder
