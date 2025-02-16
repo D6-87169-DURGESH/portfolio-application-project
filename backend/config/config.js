@@ -1,8 +1,10 @@
+require("dotenv").config();
+
 module.exports = {
-  PORT: 5000,
-  DB_NAME: "portfolio_db",
-  DB_USER: "D6_87169_Durgesh",
-  DB_PASSWORD: "admin",
-  DB_HOST: "localhost",
-  JWT_SECRET: "your_secret_key",
+  PORT: process.env.PORT || 5000,
+  DB_NAME: process.env.DB_NAME,
+  DB_USER: process.env.DB_USER,
+  DB_PASSWORD: process.env.DB_PASSWORD,
+  DB_HOST: process.env.DB_HOST,
+  JWT_SECRET: process.env.JWT_SECRET,
 };

@@ -1,8 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const sequelize = require("./config/database");
+const config = require("./config/config");
 
+// Import routes
 const authRoutes = require("./routes/authRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const contactRoutes = require("./routes/contactRoutes");
@@ -13,11 +15,10 @@ const homeRoutes = require("./routes/homeRoutes");
 
 const app = express();
 app.use(cors());
-// app.use(bodyParser.json());
-app.use(express.json()); // ✅ This replaces body-parser
-app.use(express.urlencoded({ extended: true })); // ✅ Enables parsing of URL-encoded data
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
 
-
+// Use Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/contact", contactRoutes);
@@ -28,4 +29,4 @@ app.use("/api/home", homeRoutes);
 
 sequelize.sync({ force: false }).then(() => console.log("✅ Database connected"));
 
-app.listen(5000, () => console.log("🚀 Server running on port 5000"));
+app.listen(config.PORT, () => console.log(`🚀 Server running on port ${config.PORT}`));

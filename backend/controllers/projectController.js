@@ -11,7 +11,6 @@ exports.createProject = async (req, res) => {
         const project = await Project.create({ title, description, image_url, github_link, live_demo_link });
         res.status(201).json({ message: "Project added successfully", project });
     } catch (error) {
-        console.error("❌ Error in createProject:", error);
         res.status(500).json({ error: "Failed to add project" });
     }
 };
@@ -21,12 +20,9 @@ exports.getProjects = async (req, res) => {
         const projects = await Project.findAll();
         res.json(projects);
     } catch (error) {
-        console.error("❌ Error in getProjects:", error);
         res.status(500).json({ error: "Failed to fetch projects" });
     }
 };
-
-// ❌ Removed updateProject function
 
 exports.deleteProject = async (req, res) => {
     try {
@@ -40,7 +36,6 @@ exports.deleteProject = async (req, res) => {
         await project.destroy();
         res.json({ message: "Project deleted successfully" });
     } catch (error) {
-        console.error("❌ Error in deleteProject:", error);
         res.status(500).json({ error: "Failed to delete project" });
     }
 };
