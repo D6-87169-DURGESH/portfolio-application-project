@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api";  
+const API_URL = "http://13.126.5.246:5000/api";  // Replace localhost with EC2 public IP
+
 
 // ========== Authentication APIs ==========
 export const registerUser = async (data) => {
