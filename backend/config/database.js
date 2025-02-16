@@ -1,4 +1,3 @@
- 
 require("dotenv").config();
 const { Sequelize } = require("sequelize");
 const config = require("./config");
@@ -9,6 +8,7 @@ const sequelize = new Sequelize(
   config.DB_PASSWORD,
   {
     host: config.DB_HOST,
+    port: config.DB_PORT,  // <-- Add this line
     dialect: "mysql",
     logging: false,
   }
